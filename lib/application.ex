@@ -10,7 +10,7 @@ defmodule App.Application do
         node = System.get_env("ASH_NODE") |> String.to_atom()
         name = System.get_env("ASH_NAME") |> String.to_atom()
         cookie = System.get_env("ASH_COOKIE") |> String.to_atom()
-        {:ok, _} = Node.start(:"#{name}")
+        {:ok, _} = Node.start(:"#{name}", :shortnames)
         true = Node.set_cookie(cookie)
         true = Node.connect(node)
         children = [{App.Monitor, []}]
