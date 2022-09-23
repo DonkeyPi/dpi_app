@@ -13,7 +13,7 @@ defmodule App.MixProject do
 
   def application do
     [
-      mod: {App, []},
+      mod: {App.Application, []},
       extra_applications: [:logger]
     ]
   end
