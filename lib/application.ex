@@ -1,7 +1,18 @@
 defmodule App.Application do
   use Application
+  require App
 
   def start(_type, _args) do
+    try do
+      setup()
+    rescue
+      e ->
+        App.log("#{inspect(e)}")
+        System.stop(1)
+    end
+  end
+
+  def setup() do
     case System.get_env("ASH_RT") do
       nil ->
         Supervisor.start_link([], strategy: :one_for_one)
