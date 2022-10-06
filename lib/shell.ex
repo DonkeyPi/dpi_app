@@ -12,7 +12,7 @@ defmodule App.Shell do
     try do
       Code.eval_string(code)
     rescue
-      e -> e
+      e -> {e, __STACKTRACE__}
     end
   end
 end
