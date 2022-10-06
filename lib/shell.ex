@@ -7,4 +7,12 @@ defmodule App.Shell do
     opts = Keyword.put(opts, :dot_iex_path, path)
     IEx.start(opts, mfa)
   end
+
+  def capture_eval(code) do
+    try do
+      Code.eval_string(code)
+    rescue
+      e -> e
+    end
+  end
 end
