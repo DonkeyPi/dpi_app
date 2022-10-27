@@ -16,8 +16,8 @@ defmodule App.Monitor do
 
   defp monitor() do
     case IO.read(:line) do
-      # :erlang.halt
-      # :init.stop
+      # :erlang.halt - sudden
+      # :init.stop - orderly
       :eof -> :init.stop()
       _ -> monitor()
     end
