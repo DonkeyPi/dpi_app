@@ -1,5 +1,5 @@
 defmodule App.Shell do
-  def shell(opts, mfa) do
+  def start(opts, mfa) do
     path =
       :code.priv_dir(:app)
       |> :filename.join(".iex.exs")
