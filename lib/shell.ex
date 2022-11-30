@@ -2,6 +2,7 @@ defmodule Ash.App.Shell do
   require Ash.App
 
   # applications can override .iex file
+  # double file not supported iex/evaluator.ex#L245
   def start(opts, mfa) do
     path =
       with true <- Ash.App.in_rt(),
