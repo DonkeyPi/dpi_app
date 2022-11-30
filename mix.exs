@@ -19,6 +19,8 @@ defmodule Ash.App.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:ash_tool, path: "../ash_tool"}
+    ]
   end
 end
