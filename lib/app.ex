@@ -1,4 +1,4 @@
-defmodule App do
+defmodule Ash.App do
   defmacro log(msg) do
     # remove Elixir from begining of name
     module = __CALLER__.module |> Atom.to_string() |> String.slice(7, 9999)

@@ -1,4 +1,4 @@
-defmodule App.Monitor do
+defmodule Ash.App.Monitor do
   def child_spec(_) do
     %{
       id: __MODULE__,

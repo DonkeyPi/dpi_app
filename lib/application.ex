@@ -1,13 +1,13 @@
-defmodule App.Application do
+defmodule Ash.App.Application do
   use Application
-  require App
+  require Ash.App
 
   def start(_type, _args) do
     try do
       setup()
     rescue
       e ->
-        App.log("#{inspect(e)}")
+        Ash.App.log("#{inspect(e)}")
         System.stop(1)
     end
   end
@@ -24,7 +24,7 @@ defmodule App.Application do
         {:ok, _} = Node.start(:"#{name}", :shortnames)
         true = Node.set_cookie(cookie)
         true = Node.connect(node)
-        children = [{App.Monitor, []}]
+        children = [{Ash.App.Monitor, []}]
         Supervisor.start_link(children, strategy: :one_for_one)
     end
   end

@@ -1,10 +1,10 @@
-defmodule App.MixProject do
+defmodule Ash.App.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :app,
-      version: "0.1.0",
+      app: :ash_app,
+      version: "0.1.1",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -13,7 +13,7 @@ defmodule App.MixProject do
 
   def application do
     [
-      mod: {App.Application, []},
+      mod: {Ash.App.Application, []},
       extra_applications: [:logger]
     ]
   end

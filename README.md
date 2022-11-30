@@ -1,12 +1,12 @@
-# App
+# Athasha App
 
 App initialization
 
+- Sets up the node
 - Exits the VM on stdin close
 - Provides runtime APIs
-- Sets up the node
 
-Runtime client library.
+Runtime client library
 
 - Logging
 - Device drivers

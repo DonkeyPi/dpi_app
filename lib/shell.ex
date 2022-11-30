@@ -1,7 +1,7 @@
-defmodule App.Shell do
+defmodule Ash.App.Shell do
   def start(opts, mfa) do
     path =
-      :code.priv_dir(:app)
+      :code.priv_dir(:ash_app)
       |> :filename.join(".iex.exs")
 
     opts = Keyword.put(opts, :dot_iex_path, path)
