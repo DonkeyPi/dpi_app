@@ -13,19 +13,19 @@ defmodule Ash.App.Application do
   end
 
   def setup() do
-    case System.get_env("ASH_RT") do
-      nil ->
-        Supervisor.start_link([], strategy: :one_for_one)
-
-      _ ->
-        node = System.get_env("ASH_NODE") |> String.to_atom()
-        name = System.get_env("ASH_NAME") |> String.to_atom()
-        cookie = System.get_env("ASH_COOKIE") |> String.to_atom()
-        {:ok, _} = Node.start(:"#{name}", :shortnames)
+    case Ash.App.in_rt() do
+      true ->
+        remote = Ash.App.node_remote()
+        local = Ash.App.node_name()
+        cookie = Ash.App.cookie()
+        {:ok, _} = Node.start(local, :shortnames)
         true = Node.set_cookie(cookie)
-        true = Node.connect(node)
+        true = Node.connect(remote)
         children = [{Ash.App.Monitor, []}]
         Supervisor.start_link(children, strategy: :one_for_one)
+
+      _ ->
+        Supervisor.start_link([], strategy: :one_for_one)
     end
   end
 end

@@ -1,4 +1,10 @@
 defmodule Ash.App do
+  def in_rt(), do: System.get_env("ASH_RT") != nil
+  def node_remote(), do: System.get_env("ASH_NODE") |> String.to_atom()
+  def node_name(), do: System.get_env("ASH_NAME") |> String.to_atom()
+  def app_name(), do: System.get_env("ASH_APP") |> String.to_atom()
+  def cookie(), do: System.get_env("ASH_COOKIE") |> String.to_atom()
+
   defmacro log(msg) do
     # remove Elixir from begining of name
     module = __CALLER__.module |> Atom.to_string() |> String.slice(7, 9999)

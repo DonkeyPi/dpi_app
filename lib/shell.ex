@@ -1,16 +1,19 @@
 defmodule Ash.App.Shell do
+  require Ash.App
+
   # applications can override .iex file
   def start(opts, mfa) do
     path =
-      case System.get_env("ASH_NAME") do
-        nil ->
+      with true <- Ash.App.in_rt(),
+           path <-
+             Ash.App.app_name()
+             |> :code.priv_dir()
+             |> :filename.join(".iex.exs"),
+           true <- File.regular?(path) do
+        path
+      else
+        _ ->
           :code.priv_dir(:ash_app)
-          |> :filename.join(".iex.exs")
-
-        name ->
-          name
-          |> String.to_atom()
-          |> :code.priv_dir()
           |> :filename.join(".iex.exs")
       end
 
