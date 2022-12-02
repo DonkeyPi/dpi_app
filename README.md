@@ -1,4 +1,4 @@
-# Athasha App
+# AppShell App
 
 App initialization
 
