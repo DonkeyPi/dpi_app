@@ -22,7 +22,9 @@ defmodule Ash.App.Shell do
     IEx.start(opts, mfa)
   end
 
-  def capture_eval(code) do
+  def capture_eval(pid, code) do
+    Process.link(pid)
+
     try do
       Code.eval_string(code)
     rescue
