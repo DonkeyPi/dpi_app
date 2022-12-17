@@ -28,7 +28,15 @@ defmodule Ash.App.Shell do
     try do
       Code.eval_string(code)
     rescue
-      e -> {e, __STACKTRACE__}
+      e ->
+        # better formatting printing from source
+        IO.inspect(e)
+        IO.inspect(__STACKTRACE__)
+        :rescued
+    after
+      # unlink so that the calling process wont
+      # get killed before getting rpc response
+      Process.unlink(pid)
     end
   end
 end
