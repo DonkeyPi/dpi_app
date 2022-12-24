@@ -37,19 +37,19 @@ defmodule Ash.App.Shell do
     Process.link(pid)
     Process.flag(:trap_exit, true)
 
-    parent = self()
-
     child =
       spawn_link(fn ->
         try do
           res = Code.eval_string(code)
-          send(parent, {:result, self(), res})
+          IO.inspect(res)
         rescue
-          e -> send(parent, {:rescue, self(), e, __STACKTRACE__})
+          e ->
+            IO.inspect(e)
+            IO.inspect(__STACKTRACE__)
+        after
+          # kill process started by the script
+          Process.exit(self(), :done)
         end
-
-        # kill process started by the script
-        Process.exit(self(), :done)
       end)
 
     # - Exit of the parent must kill the child
@@ -59,35 +59,18 @@ defmodule Ash.App.Shell do
     # - Not linking the child wont't kill processes started
     #   by the script.
 
-    # The compromise is to log the result locally and just send a
-    # atom response to 'ensure' the response is displayed before
-    # the killing chain reaches the remote process.
-    result =
-      receive do
-        {:result, ^child, res} ->
-          IO.inspect(res)
-          :done
+    # The compromise is to log the result locally and exit
+    # abnormally to propagate the shutdown of all linked
+    # processes.
+    receive do
+      {:EXIT, ^child, reason} ->
+        # better formatting from source
+        IO.inspect(reason)
+        Process.exit(self(), :killed)
 
-        {:rescue, ^child, e, st} ->
-          # better formatting from source
-          IO.inspect(e)
-          IO.inspect(st)
-          :rescued
-
-        {:EXIT, ^child, reason} ->
-          # better formatting from source
-          IO.inspect(reason)
-          :killed
-
-        msg ->
-          # did the remote died?
-          raise "unexpected #{inspect(msg)}"
-      end
-
-    # unlink so that the calling process wont
-    # get killed before getting rpc response
-    Process.unlink(pid)
-
-    result
+      msg ->
+        # did the remote died?
+        raise "unexpected #{inspect(msg)}"
+    end
   end
 end
