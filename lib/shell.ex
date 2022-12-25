@@ -70,7 +70,7 @@ defmodule Ash.App.Shell do
 
       msg ->
         # did the remote died?
-        raise "unexpected #{inspect(msg)}"
+        raise "Unexpected #{inspect(msg)}"
     end
   end
 end
