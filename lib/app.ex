@@ -4,6 +4,8 @@ defmodule Ash.App do
   def node_name(), do: System.get_env("ASH_NAME") |> String.to_atom()
   def app_name(), do: System.get_env("ASH_APP") |> String.to_atom()
   def cookie(), do: System.get_env("ASH_COOKIE") |> String.to_atom()
+  def data(), do: path() |> String.replace_suffix(".lib", ".data")
+  def path(), do: System.get_env("ASH_PATH")
 
   defmacro log(msg) do
     # remove Elixir from begining of name
