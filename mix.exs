@@ -20,6 +20,7 @@ defmodule Ash.App.MixProject do
 
   defp deps do
     [
+      {:zoneinfo, "~> 0.1.5"},
       {:ash_tool, path: "../ash_tool"}
     ]
   end

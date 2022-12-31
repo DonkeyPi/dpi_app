@@ -1,0 +1,3 @@
+%{
+  "zoneinfo": {:hex, :zoneinfo, "0.1.5", "e2487feadd7ba04a2bb74f84717aeb281dfe875bc1abb63169b9304707731543", [:mix], [], "hexpm", "45ee6f9860d1d5a2fbd7c297c18487c74429fd59238f2782104e2c27a7154e12"},
+}

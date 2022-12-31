@@ -3,6 +3,8 @@ defmodule Ash.App.Application do
   require Ash.App
 
   def start(_type, _args) do
+    Calendar.put_time_zone_database(Zoneinfo.TimeZoneDatabase)
+
     try do
       setup()
     rescue
