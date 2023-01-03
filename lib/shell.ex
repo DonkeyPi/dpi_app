@@ -1,6 +1,16 @@
 defmodule Ash.App.Shell do
   require Ash.App
 
+  defmacro __using__(_opts) do
+    path =
+      :code.priv_dir(:ash_app)
+      |> :filename.join(".iex.exs")
+
+    path
+    |> File.read!()
+    |> Code.string_to_quoted!(file: path)
+  end
+
   # applications can override .iex file
   # double file not supported iex/evaluator.ex#L245
   def start(opts, mfa) do
