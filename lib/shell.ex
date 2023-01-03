@@ -4,7 +4,7 @@ defmodule Ash.App.Shell do
   defmacro __using__(_opts) do
     path =
       :code.priv_dir(:ash_app)
-      |> :filename.join(".iex.exs")
+      |> :filename.join("iex.exs")
 
     path
     |> File.read!()
@@ -19,13 +19,13 @@ defmodule Ash.App.Shell do
            path <-
              Ash.App.app_name()
              |> :code.priv_dir()
-             |> :filename.join(".iex.exs"),
+             |> :filename.join("iex.exs"),
            true <- File.regular?(path) do
         path
       else
         _ ->
           :code.priv_dir(:ash_app)
-          |> :filename.join(".iex.exs")
+          |> :filename.join("iex.exs")
       end
 
     opts = Keyword.put(opts, :dot_iex_path, path)
