@@ -1,9 +1,9 @@
-defmodule Ash.App.MixProject do
+defmodule Dpi.App.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ash_app,
+      app: :dpi_app,
       version: "0.1.1",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
@@ -13,7 +13,7 @@ defmodule Ash.App.MixProject do
 
   def application do
     [
-      mod: {Ash.App.Application, []},
+      mod: {Dpi.App.Application, []},
       extra_applications: [:logger]
     ]
   end
@@ -21,7 +21,7 @@ defmodule Ash.App.MixProject do
   defp deps do
     [
       {:zoneinfo, "~> 0.1.5"},
-      {:ash_tool, path: "../ash_tool"}
+      {:dpi_tool, path: "../dpi_tool"}
     ]
   end
 end

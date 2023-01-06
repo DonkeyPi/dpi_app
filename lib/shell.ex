@@ -1,9 +1,9 @@
-defmodule Ash.App.Shell do
-  require Ash.App
+defmodule Dpi.App.Shell do
+  require Dpi.App
 
   defmacro __using__(_opts) do
     path =
-      :code.priv_dir(:ash_app)
+      :code.priv_dir(:dpi_app)
       |> :filename.join("iex.exs")
 
     path
@@ -15,16 +15,16 @@ defmodule Ash.App.Shell do
   # double file not supported iex/evaluator.ex#L245
   def start(opts, mfa) do
     path =
-      with true <- Ash.App.in_rt(),
+      with true <- Dpi.App.in_rt(),
            path <-
-             Ash.App.app_name()
+             Dpi.App.app_name()
              |> :code.priv_dir()
              |> :filename.join("iex.exs"),
            true <- File.regular?(path) do
         path
       else
         _ ->
-          :code.priv_dir(:ash_app)
+          :code.priv_dir(:dpi_app)
           |> :filename.join("iex.exs")
       end
 
@@ -32,15 +32,15 @@ defmodule Ash.App.Shell do
     IEx.start(opts, mfa)
   end
 
-  # mix ash.eval 'raise "hello"'
+  # mix dpi.eval 'raise "hello"'
   #   - throws %RuntimeError
   #   - script is rescued
-  # mix ash.eval 'raise 1'
+  # mix dpi.eval 'raise 1'
   #   - throws %ArgumentError
   #   - script is rescued
-  # mix ash.eval 'Process.exit(self(), :stop)'
+  # mix dpi.eval 'Process.exit(self(), :stop)'
   #   - receives an EXIT message
-  # mix ash.eval 'Agent.start_link(fn -> nil end, name: :ash_eval_script)'
+  # mix dpi.eval 'Agent.start_link(fn -> nil end, name: :dpi_eval_script)'
   #   - to test that previous script has died
 
   def capture_eval(pid, code) do

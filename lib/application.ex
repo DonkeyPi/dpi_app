@@ -1,6 +1,6 @@
-defmodule Ash.App.Application do
+defmodule Dpi.App.Application do
   use Application
-  require Ash.App
+  require Dpi.App
 
   def start(_type, _args) do
     Calendar.put_time_zone_database(Zoneinfo.TimeZoneDatabase)
@@ -9,21 +9,21 @@ defmodule Ash.App.Application do
       setup()
     rescue
       e ->
-        Ash.App.log("#{inspect(e)}")
+        Dpi.App.log("#{inspect(e)}")
         System.stop(1)
     end
   end
 
   def setup() do
-    case Ash.App.in_rt() do
+    case Dpi.App.in_rt() do
       true ->
-        remote = Ash.App.node_remote()
-        local = Ash.App.node_name()
-        cookie = Ash.App.cookie()
+        remote = Dpi.App.node_remote()
+        local = Dpi.App.node_name()
+        cookie = Dpi.App.cookie()
         {:ok, _} = Node.start(local, :shortnames)
         true = Node.set_cookie(cookie)
         true = Node.connect(remote)
-        children = [{Ash.App.Monitor, []}]
+        children = [{Dpi.App.Monitor, []}]
         Supervisor.start_link(children, strategy: :one_for_one)
 
       _ ->

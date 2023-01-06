@@ -1,4 +1,4 @@
-# AppShell App
+# DonkeyPi App
 
 App initialization
 
