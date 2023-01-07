@@ -75,7 +75,7 @@ defmodule Dpi.App.Shell do
     receive do
       {:EXIT, ^child, reason} ->
         # better formatting from source
-        IO.inspect(reason)
+        if reason != :done, do: IO.inspect(reason)
         Process.exit(self(), :killed)
 
       msg ->
