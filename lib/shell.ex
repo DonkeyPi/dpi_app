@@ -56,6 +56,14 @@ defmodule Dpi.App.Shell do
           e ->
             IO.inspect(e)
             IO.inspect(__STACKTRACE__)
+        catch
+          :exit, e ->
+            IO.inspect({:exit, e})
+            IO.inspect(__STACKTRACE__)
+
+          e ->
+            IO.inspect(e)
+            IO.inspect(__STACKTRACE__)
         after
           # kill process started by the script
           Process.exit(self(), :done)
