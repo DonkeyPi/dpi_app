@@ -26,4 +26,9 @@ defmodule Dpi.App.Signature do
     signature = signature(appname) |> Base.decode64!()
     :public_key.verify(msg, :sha512, signature, pubkey)
   end
+
+  def signed(appname) do
+    {:ok, hostname} = :inet.gethostname()
+    verify(hostname, appname, load_pubkey())
+  end
 end
