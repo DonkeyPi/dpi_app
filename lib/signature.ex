@@ -21,14 +21,23 @@ defmodule Dpi.App.Signature do
     :public_key.pem_entry_decode(pubkey)
   end
 
-  def verify(hostname, appname, pubkey) do
-    msg = "#{hostname}:#{appname}"
+  def verify(boardid, appname, pubkey) do
+    msg = "#{boardid}:#{appname}"
     signature = signature(appname) |> Base.decode64!()
     :public_key.verify(msg, :sha512, signature, pubkey)
   end
 
   def signed(appname) do
-    {:ok, hostname} = :inet.gethostname()
-    verify(hostname, appname, load_pubkey())
+    verify(boardid(), appname, load_pubkey())
+  end
+
+  def boardid() do
+    if Dpi.App.in_nerves() do
+      {boardid, 0} = System.cmd("boardid", ["-b", "rpi", "-n", "8"])
+      "dpi-#{boardid |> String.trim()}"
+    else
+      {:ok, hostname} = :inet.gethostname()
+      hostname
+    end
   end
 end
