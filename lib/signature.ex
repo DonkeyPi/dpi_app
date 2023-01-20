@@ -6,7 +6,7 @@ defmodule Dpi.App.Signature do
   def signature(app_name) do
     path =
       :code.priv_dir(app_name)
-      |> Path.join("donkeypi.txt")
+      |> Path.join("signature.txt")
 
     if File.exists?(path), do: File.read!(path), else: ""
   end
