@@ -14,7 +14,7 @@ defmodule Dpi.App.MixProject do
   def application do
     [
       mod: {Dpi.App.Application, []},
-      extra_applications: [:logger, :public_key, :crypto]
+      extra_applications: [:logger, :public_key, :ssh, :crypto]
     ]
   end
 

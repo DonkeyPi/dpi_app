@@ -6,19 +6,19 @@ defmodule Dpi.App.Signature do
   def signature(app_name) do
     path =
       :code.priv_dir(app_name)
-      |> Path.join("signature.txt")
+      |> Path.join("signature")
 
     if File.exists?(path), do: File.read!(path), else: ""
   end
 
   def load_pubkey() do
-    # works with openssl keys but not with ssh-keygen keys
-    pubsha1 = "5d25262e82f9d14500868ac2b9f8c8df7058782c"
+    # updated to work with dpi.keygen pub key (and ssh-keygen)
+    pubsha1 = "07252ff1a0600a6aa9aeb355809c4b88890a684c"
     path = Path.join(:code.priv_dir(:dpi_app), "donkeypi.pub")
     pubkey = File.read!(path)
     ^pubsha1 = sha1(pubkey)
-    [pubkey] = :public_key.pem_decode(pubkey)
-    :public_key.pem_entry_decode(pubkey)
+    [{rsa_public_key, _}] = :ssh_file.decode(pubkey, :openssh_key)
+    rsa_public_key
   end
 
   def verify(boardid, appname, pubkey) do
