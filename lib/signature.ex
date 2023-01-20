@@ -13,9 +13,9 @@ defmodule Dpi.App.Signature do
 
   def load_pubkey() do
     # updated to work with dpi.keygen pub key (and ssh-keygen)
-    pubsha1 = "07252ff1a0600a6aa9aeb355809c4b88890a684c"
+    pubsha1 = "ece37bf7ba62f4b92c1bfd728b32a76aeeb934af"
     path = Path.join(:code.priv_dir(:dpi_app), "donkeypi.pub")
-    pubkey = File.read!(path)
+    pubkey = File.read!(path) |> String.trim()
     ^pubsha1 = sha1(pubkey)
     [{rsa_public_key, _}] = :ssh_file.decode(pubkey, :openssh_key)
     rsa_public_key
