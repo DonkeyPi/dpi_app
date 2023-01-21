@@ -41,7 +41,7 @@ defmodule Dpi.App.Nerves do
 
   def read_authorized_keys() do
     if on() do
-      File.read!("/data/nerves_ssh/default_user/authorized_keys")
+      File.read("/data/nerves_ssh/default_user/authorized_keys")
     end
   end
 

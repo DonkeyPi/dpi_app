@@ -70,7 +70,7 @@ defmodule Dpi.App.Recovery do
     Nerves.sync!()
   end
 
-  def generate_pair(timestamp) do
+  def generate_pair(comment) do
     {:RSAPrivateKey, _, modulus, publicExponent, _, _, _, _exponent1, _, _, _otherPrimeInfos} =
       rsa_private_key = :public_key.generate_key({:rsa, 4096, 65537})
 
@@ -78,8 +78,52 @@ defmodule Dpi.App.Recovery do
     private_key = :public_key.pem_encode([pem_entry])
 
     rsa_public_key = {:RSAPublicKey, modulus, publicExponent}
-    public_key = :ssh_file.encode([{rsa_public_key, [{:comment, timestamp}]}], :openssh_key)
+    public_key = :ssh_file.encode([{rsa_public_key, [{:comment, comment}]}], :openssh_key)
 
     {private_key, public_key |> String.trim()}
+  end
+
+  def recover() do
+    boardid = Nerves.boardid()
+
+    keys = key_list()
+
+    for disk <- UsbDisk.list(), reduce: false do
+      true ->
+        true
+
+      false ->
+        disk
+        |> UsbDisk.join()
+        |> Path.join("#{boardid}-*.key")
+        |> Path.wildcard()
+        |> Enum.any?(fn path -> is_key(path, keys) end)
+    end
+  end
+
+  def key_list() do
+    case Nerves.read_authorized_keys() do
+      {:ok, data} -> String.split(data, "\n", trim: true)
+      _ -> []
+    end
+  end
+
+  def is_key(path, keys) do
+    filename = Path.basename(path) |> String.trim_trailing(".key")
+
+    with {:ok, data} <- File.read(path),
+         [pem_entry] <- :public_key.pem_decode(data),
+         {:RSAPrivateKey, _, modulus, publicExponent, _, _, _, _exponent1, _, _, _otherPrimeInfos} <-
+           :public_key.pem_entry_decode(pem_entry) do
+      rsa_public_key = {:RSAPublicKey, modulus, publicExponent}
+
+      public_key =
+        :ssh_file.encode([{rsa_public_key, [{:comment, filename}]}], :openssh_key)
+        |> String.trim()
+
+      Enum.member?(keys, public_key)
+    else
+      _ -> false
+    end
   end
 end
