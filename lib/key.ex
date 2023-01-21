@@ -1,4 +1,4 @@
-defmodule Dpi.App.Recovery do
+defmodule Dpi.App.Key do
   alias Dpi.App.UsbDisk
   alias Dpi.App.Nerves
   alias Dpi.App.Time
@@ -13,7 +13,12 @@ defmodule Dpi.App.Recovery do
   def list(true) do
     File.mkdir_p!(@keys)
     pattern = "#{@keys}/#{Nerves.boardid()}-*.pub"
-    Path.wildcard(pattern) |> Enum.map(&Path.basename/1)
+
+    # most recent first
+    Path.wildcard(pattern)
+    |> Enum.map(&Path.basename/1)
+    |> Enum.sort()
+    |> Enum.reverse()
   end
 
   # up to millis
@@ -83,7 +88,7 @@ defmodule Dpi.App.Recovery do
     {private_key, public_key |> String.trim()}
   end
 
-  def recover() do
+  def login() do
     boardid = Nerves.boardid()
 
     keys = key_list()
@@ -93,10 +98,13 @@ defmodule Dpi.App.Recovery do
         true
 
       false ->
+        # most recent first
         disk
         |> UsbDisk.join()
         |> Path.join("#{boardid}-*.key")
         |> Path.wildcard()
+        |> Enum.sort()
+        |> Enum.reverse()
         |> Enum.any?(fn path -> is_key(path, keys) end)
     end
   end
@@ -110,11 +118,12 @@ defmodule Dpi.App.Recovery do
 
   def is_key(path, keys) do
     filename = Path.basename(path) |> String.trim_trailing(".key")
+    IO.inspect(filename)
 
     with {:ok, data} <- File.read(path),
-         [pem_entry] <- :public_key.pem_decode(data),
+         [{:RSAPrivateKey, data, :not_encrypted}] <- :public_key.pem_decode(data),
          {:RSAPrivateKey, _, modulus, publicExponent, _, _, _, _exponent1, _, _, _otherPrimeInfos} <-
-           :public_key.pem_entry_decode(pem_entry) do
+           safe_pem_entry_decode({:RSAPrivateKey, data, :not_encrypted}) do
       rsa_public_key = {:RSAPublicKey, modulus, publicExponent}
 
       public_key =
@@ -124,6 +133,15 @@ defmodule Dpi.App.Recovery do
       Enum.member?(keys, public_key)
     else
       _ -> false
+    end
+  end
+
+  # throws on artificially corrupted key
+  defp safe_pem_entry_decode(entry) do
+    try do
+      :public_key.pem_entry_decode(entry)
+    rescue
+      e -> {:error, e}
     end
   end
 end

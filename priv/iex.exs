@@ -1,7 +1,6 @@
 import Dpi.App.Imports
 
-alias Dpi.App.Signature
-alias Dpi.App.Recovery
+alias Dpi.App.Key
 alias Dpi.App.Network
 alias Dpi.App.Console
 alias Dpi.App.UsbDisk
