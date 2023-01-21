@@ -3,6 +3,7 @@ defmodule Dpi.App.UsbDisk do
   @disks "/data/disks"
 
   def root(), do: @disks
+  def join(path), do: Path.join(root(), path)
 
   def list(), do: list(Nerves.on())
   def list(false), do: []

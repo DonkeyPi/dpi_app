@@ -38,4 +38,25 @@ defmodule Dpi.App.Nerves do
   def set_time(naive) do
     :rpc.call(:dpi@localhost, NervesTime.SystemTime, :set_time, [naive])
   end
+
+  def read_authorized_keys() do
+    if on() do
+      File.read!("/data/nerves_ssh/default_user/authorized_keys")
+    end
+  end
+
+  # Confirmed file recreated on reboot (to remove spurious keys)
+  def rm_authorized() do
+    if on() do
+      File.rm("/data/nerves_ssh/default_user/authorized_keys")
+    end
+  end
+
+  def add_pubkey(pubkey) do
+    :rpc.call(:dpi@localhost, NervesSSH, :add_authorized_key, [pubkey])
+  end
+
+  def remove_pubkey(pubkey) do
+    :rpc.call(:dpi@localhost, NervesSSH, :remove_authorized_key, [pubkey])
+  end
 end
