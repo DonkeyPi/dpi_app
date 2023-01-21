@@ -34,4 +34,8 @@ defmodule Dpi.App.Nerves do
       hostname
     end
   end
+
+  def set_time(naive) do
+    :rpc.call(:dpi@localhost, NervesTime.SystemTime, :set_time, [naive])
+  end
 end

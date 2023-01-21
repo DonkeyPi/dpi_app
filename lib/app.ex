@@ -8,6 +8,7 @@ defmodule Dpi.App do
   def data(), do: path() |> String.replace_suffix(".lib", ".data")
   def path(), do: System.get_env("DPI_PATH")
 
+  # called from Application entry points only
   defmacro log(msg) do
     # remove Elixir from begining of name
     module = __CALLER__.module |> Atom.to_string() |> String.slice(7, 9999)
