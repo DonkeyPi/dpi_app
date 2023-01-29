@@ -33,4 +33,39 @@ defmodule Dpi.App.Bus do
       for {pid, rargs} <- entries, do: send(pid, {:event, {event, rargs, dargs}})
     end)
   end
+
+  # to be used from shell
+  # Bus.monitor(:scanner)
+  def monitor(event) do
+    pid = spawn_link(fn -> monitor_init(event) end)
+    IO.read(:line)
+    :ok = monitor_done(pid)
+  end
+
+  defp monitor_init(event) do
+    register!(event)
+    monitor_loop(event)
+  end
+
+  defp monitor_loop(event) do
+    self_pid = self()
+
+    receive do
+      {^self_pid, pid, :done} ->
+        send(pid, {pid, self(), :done})
+
+      {:event, {^event, _, dargs}} ->
+        IO.puts("#{inspect({event, dargs})}")
+        monitor_loop(event)
+    end
+  end
+
+  defp monitor_done(pid) do
+    send(pid, {pid, self(), :done})
+    self_pid = self()
+
+    receive do
+      {^self_pid, ^pid, :done} -> :ok
+    end
+  end
 end
