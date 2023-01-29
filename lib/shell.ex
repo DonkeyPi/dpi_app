@@ -1,6 +1,4 @@
 defmodule Dpi.App.Shell do
-  require Dpi.Api.Log
-  alias Dpi.Api.Log
   alias Dpi.Api.Env
 
   defmacro __using__(_opts) do
