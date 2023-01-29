@@ -21,6 +21,7 @@ defmodule Dpi.App.MixProject do
   defp deps do
     [
       {:zoneinfo, "~> 0.1.5"},
+      {:circuits_gpio, "~> 1.1"},
       {:dpi_tool, path: "../dpi_tool"}
     ]
   end

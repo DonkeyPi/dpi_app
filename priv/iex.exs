@@ -10,5 +10,6 @@ alias Dpi.App.Store
 alias Dpi.App.State
 alias Dpi.App.Time
 alias Dpi.App.Bus
+alias Dpi.App.Tower
 
 alias Dpi.Tool
