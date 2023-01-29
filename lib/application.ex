@@ -1,6 +1,8 @@
 defmodule Dpi.App.Application do
   use Application
-  require Dpi.App
+  require Dpi.Api.Log
+  alias Dpi.Api.Log
+  alias Dpi.Api.Env
 
   def start(_type, _args) do
     Calendar.put_time_zone_database(Zoneinfo.TimeZoneDatabase)
@@ -9,17 +11,17 @@ defmodule Dpi.App.Application do
       setup()
     rescue
       e ->
-        Dpi.App.log("#{inspect(e)}")
+        Log.log("#{inspect(e)}")
         System.stop(1)
     end
   end
 
   def setup() do
-    case Dpi.App.in_rt() do
+    case Env.in_rt() do
       true ->
-        remote = Dpi.App.node_remote()
-        local = Dpi.App.node_name()
-        cookie = Dpi.App.cookie()
+        remote = Env.node_remote()
+        local = Env.node_name()
+        cookie = Env.cookie()
         {:ok, _} = Node.start(local, :shortnames)
         true = Node.set_cookie(cookie)
         true = Node.connect(remote)

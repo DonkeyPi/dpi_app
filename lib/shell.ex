@@ -1,5 +1,7 @@
 defmodule Dpi.App.Shell do
-  require Dpi.App
+  require Dpi.Api.Log
+  alias Dpi.Api.Log
+  alias Dpi.Api.Env
 
   defmacro __using__(_opts) do
     path =
@@ -15,9 +17,9 @@ defmodule Dpi.App.Shell do
   # double file not supported iex/evaluator.ex#L245
   def start(opts, mfa) do
     path =
-      with true <- Dpi.App.in_rt(),
+      with true <- Env.in_rt(),
            path <-
-             Dpi.App.app_name()
+             Env.app_name()
              |> :code.priv_dir()
              |> :filename.join("iex.exs"),
            true <- File.regular?(path) do

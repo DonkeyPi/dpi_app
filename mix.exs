@@ -14,14 +14,14 @@ defmodule Dpi.App.MixProject do
   def application do
     [
       mod: {Dpi.App.Application, []},
-      extra_applications: [:logger, :public_key, :ssh, :crypto]
+      extra_applications: [:logger, :dpi_api]
     ]
   end
 
   defp deps do
     [
       {:zoneinfo, "~> 0.1.5"},
-      {:circuits_gpio, "~> 1.1"},
+      {:dpi_api, path: "../dpi_api"},
       {:dpi_tool, path: "../dpi_tool"}
     ]
   end
