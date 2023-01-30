@@ -1,6 +1,7 @@
 import Dpi.App.Imports
 
 alias Dpi.Api.Key
+alias Dpi.Api.Dispatch
 alias Dpi.Api.Network
 alias Dpi.Api.Console
 alias Dpi.Api.Disk
