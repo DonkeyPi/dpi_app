@@ -17,14 +17,14 @@ defmodule Dpi.App.Application do
   end
 
   def setup() do
-    case Env.in_rt() do
+    case Env.rt?() do
       true ->
-        remote = Env.node_remote()
+        root = Env.node_root()
         local = Env.node_name()
         cookie = Env.cookie()
         {:ok, _} = Node.start(local, :shortnames)
         true = Node.set_cookie(cookie)
-        true = Node.connect(remote)
+        true = Node.connect(root)
         children = [{Dpi.App.Monitor, []}]
         Supervisor.start_link(children, strategy: :one_for_one)
 

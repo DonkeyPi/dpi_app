@@ -15,7 +15,7 @@ defmodule Dpi.App.Shell do
   # double file not supported iex/evaluator.ex#L245
   def start(opts, mfa) do
     path =
-      with true <- Env.in_rt(),
+      with true <- Env.rt?(),
            path <-
              Env.app_name()
              |> :code.priv_dir()
